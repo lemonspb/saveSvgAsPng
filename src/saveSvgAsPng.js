@@ -301,17 +301,21 @@
     });
   };
 
-  out$.svgAsDataUri = (el, options, done) => {
+  out$.svgAsDataUri = function (el, options, done) {
     requireDomNode(el);
-    return out$.prepareSvg(el, options)
-      .then(({src, width, height}) => {
-          const svgXml = `data:image/svg+xml;base64,${window.btoa(reEncode(doctype+src))}`;
-          if (typeof done === 'function') {
-              done(svgXml, width, height);
-          }
-          return svgXml;
-      });
+    return out$.prepareSvg(el, options).then(function (_ref4) {
+      var src = _ref4.src,
+          width = _ref4.width,
+          height = _ref4.height;
+          src = src.replace(/(<img[^>]+)>/g, "$1 ></img>");
+      var svgXml = 'data:image/svg+xml;base64,' + window.btoa(reEncode(doctype + src));
+      if (typeof done === 'function') {
+        done(svgXml, width, height);
+      }
+      return svgXml;
+    });
   };
+
 
   out$.svgAsPngUri = (el, options, done) => {
     requireDomNode(el);
